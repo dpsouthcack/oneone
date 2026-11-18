@@ -6,7 +6,7 @@ flags = [
  ('A01','High — RESOLVED rev1','[RESOLVED 2026-11-18 in DPSC_2026_DEFAULT_1A_rev1: User 13 (P16 slot 13 on A/B/C 45) changed from Aux 1 PRE to Matrix 5 POST L+R] Matrix 5 "ABLETON P16" is fed (Aux 1-8 send to MX5 at 0 dB) but no User Signal or output carries Matrix 5. USR 1-16 cover MTX 1,2,3,4,6,7,8 only.','io.in.USR 1-16; aux.*.send.MX5','Assign a user signal / P16 slot to Matrix 5 if Ableton is wanted on personal mixers.'),
  ('A02','High — RESOLVED rev2','[RESOLVED 2026-11-18 in rev2: main.1.fdr -144 -> 0 dB, matching Mains 2-4] Main 1 HOUSE fader is at -inf (-144 dB) in this scene, while Mains 2-4 are at 0 dB.','main.1.fdr = -144','Confirm intended (safe default) before show.'),
  ('A03','High — RESOLVED rev2','[RESOLVED 2026-11-18 in rev2: all 40 ch + 8 aux now send to Buses 9-12 at -10 dB PRE, copied from their Bus 5-8 sends] IEM5-IEM8 (Buses 9-12) are patched to A/B/C outputs but no channel or aux sends to them.','ch/aux send 9-12 all off; out A5-8, B5-8, C5-8, C17-24','Build IEM5-8 mixes or unpatch.'),
- ('A04','Med','Stage Mon 1-4 (Buses 1-4) and FX buses 13-16 have sends switched ON but at -inf on every channel; only IEM1-4 (Buses 5-8) carry signal (-10 dB PRE).','ch.*.send 1-4,13-16 lvl -144','Expected for a template; note no FX returns or wedges will sound until raised.'),
+ ('A04','Med — RESOLVED rev5','[RESOLVED 2026-11-18 in rev5: 352 sends raised -inf -> -10 dB (44 strips x Bus 1-4 PRE + Bus 13-16 POST); TB ch 29-32 stay off] Stage Mon 1-4 (Buses 1-4) and FX buses 13-16 have sends switched ON but at -inf on every channel; only IEM1-4 (Buses 5-8) carry signal (-10 dB PRE).','ch.*.send 1-4,13-16 lvl -144','Expected for a template; note no FX returns or wedges will sound until raised.'),
  ('A05','Med — RESOLVED rev1','[RESOLVED 2026-11-18 in rev1: LCL 6 renamed MIC8 -> MIC6] Input port LCL 6 is labelled "MIC8" (duplicate of LCL 8 "MIC8"); channel 6 is named "MIC6".','io.in.LCL.6.name','Rename LCL 6 to MIC6.'),
  ('A06','Low','Name mismatches: Ch 2 "LEAD MIC" vs port LCL 2 "LEAD MIC2"; Ch 3-5 "MIC3/4/5" vs ports "MIC 3/4/5".','ch.2.name; io.in.LCL.2-5','Align naming.'),
  ('A07','Med — RESOLVED rev3','[RESOLVED 2026-11-18 in rev3: USB 8 = User 24 now Ch 8 MIC8 PRE L+R (was Ch 7 R duplicate); USB 45/46 now LCL 21/22 VIDEO L/R (were blank B19/B20)] USB multitrack (USB 1-48) omits Ch 8 MIC8 and LCL 21/22 VIDEO; Ch 7 uses two tracks (L/R split of a mono channel).','out.USB 1-48; USR 17-24','Decide whether MIC8 and VIDEO need recording; reclaim one Ch7 track.'),
@@ -16,6 +16,7 @@ flags = [
  ('A11','Info','Talkback Ch 29-32 (B21-24) are off the mains and go to IEM1-4 (-10 dB) plus Matrix 8 TB P16 only.','ch.29-32','OK as configured.'),
  ('A12','Info','Ch 33-37 (A1-A5) and Aux 1-8 (C1-C15) are unnamed with faders at -inf; Ch 38 DJ, 39 VIDEO, 40 OSC at -inf.','ch.33-40; aux.1-8','Name or leave as spares.'),
  ('A14','Med — RESOLVED rev4','[RESOLVED 2026-11-18 in rev4: Bus 5-12 IEM1-IEM8 faders -144 -> 0 dB, unmuted] IEM bus masters Buses 5-12 (IEM1-IEM8) are all at -inf (-144 dB). Sends are built, but no IEM will be heard until its bus fader is raised.','bus.5-12.fdr = -144','Raise each IEM master at soundcheck (left down on purpose for ear safety).'),
+ ('A15','Med','Stage Mon 1-4 master faders (Buses 1-4) are at -inf (-144 dB). Wedge sends are now at -10 dB PRE, but no wedge will be heard until these masters are raised. (FX buses 13-16 masters are already 0 dB and feed Main 1 HOUSE, so FX returns are now live.)','bus.1-4.fdr = -144','Raise Stage Mon 1-4 masters (DP decision; same as IEM masters in rev4).'),
  ('A13','Info','Output index decoding (BUS/MAIN n -> bus ceil(n/2), odd=L even=R) is inferred from the patch pattern, not a vendor document.','Snapshot Info sheet','Spot-check one output on the console.'),
 ]
 ws = wb.create_sheet('Audit Flags', 0)
@@ -57,6 +58,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'Revision DPSC_2026_DEFAULT_1A_rev4.snap (built on rev3): A14 fixed — IEM1-IEM8 master faders (Buses 5-12) raised from -inf to 0 dB at DP request. With every ch/aux sending -10 dB PRE, all eight IEM mixes are now live on scene load.',
  'rev4 SHA-256 c8653c86d48d0cbbd6c52ac9ce09e820a1fbd3a750d25df6f1757c89b2d8cd33; diff vs rev3 = 8 values (bus.5-12.fdr); same key set; 0 GRP; Rule Checks R1/R2/R3 PASS; CRLF and 41408 lines preserved; generator make_rev4.py',
  'Ear safety: keep IEM transmitters/packs down when loading rev4; set levels at soundcheck.'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'Revision DPSC_2026_DEFAULT_1A_rev5.snap (built on rev4): A04 fixed — stage monitor and FX sends brought up. Every send already switched ON to Stage Mon 1-4 (Bus 1-4, PRE) and PLATE/HALL/SH DELAY/LG DELAY (Bus 13-16, POST) raised from -inf to -10 dB, matching IEM send level: Ch 1-28, 33-40 and Aux 1-8 (44 strips, 352 sends). Taps unchanged. Talkback Ch 29-32 sends remain OFF. New flag A15: Stage Mon 1-4 masters still -inf; FX masters at 0 dB so FX now reaches HOUSE.',
+ 'rev5 SHA-256 e6e30bce79dd887ed2e79845f97a52896408bee81f4cfec891e815ea1e71520b; diff vs rev4 = 352 values, all send lvl -144 -> -10 on buses 1-4/13-16; same key set; 0 GRP; Rule Checks R1/R2/R3 PASS; CRLF and 41408 lines preserved; generator make_rev5.py',
+ 'DP to decide Stage Mon 1-4 master level (A15); trim FX send levels per source at soundcheck.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
@@ -68,6 +73,8 @@ for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev3.snap','io.out.USB.45','B 19','LCL 21','A07 USB 45 records VIDEO L'),
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev3.snap','io.out.USB.46','B 20','LCL 22','A07 USB 46 records VIDEO R')] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev4.snap',f'bus.{b}.fdr','-144','0',f'A14 IEM{b-4} master to 0 dB') for b in range(5,13)] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev5.snap',f'{g}.{n}.send.{b}.lvl','-144','-10',f'A04 {"Stage Mon "+str(b) if b<5 else "FX bus "+str(b)} send')
+          for g,r in (('ch',[*range(1,29),*range(33,41)]),('aux',range(1,9))) for n in r for b in (1,2,3,4,13,14,15,16)] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}',_b(g,n,b),'on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
           for g,r in (('ch',range(1,41)),('aux',range(1,9))) for n in r for b in (9,10,11,12)]: ch.append(r)
 for col, w in zip('ABCDEF', (12,32,26,8,8,40)): ch.column_dimensions[col].width = w
