@@ -18,6 +18,7 @@ flags = [
  ('A14','Med — RESOLVED rev4','[RESOLVED 2026-11-18 in rev4: Bus 5-12 IEM1-IEM8 faders -144 -> 0 dB, unmuted] IEM bus masters Buses 5-12 (IEM1-IEM8) are all at -inf (-144 dB). Sends are built, but no IEM will be heard until its bus fader is raised.','bus.5-12.fdr = -144','Raise each IEM master at soundcheck (left down on purpose for ear safety).'),
  ('A15','Med — RESOLVED rev6','[RESOLVED 2026-11-18 in rev6: Bus 1-4 STAGE MON1-4 faders -144 -> 0 dB, unmuted] Stage Mon 1-4 master faders (Buses 1-4) are at -inf (-144 dB). Wedge sends are now at -10 dB PRE, but no wedge will be heard until these masters are raised. (FX buses 13-16 masters are already 0 dB and feed Main 1 HOUSE, so FX returns are now live.)','bus.1-4.fdr = -144','Raise Stage Mon 1-4 masters (DP decision; same as IEM masters in rev4).'),
  ('A16','High — RESOLVED rev10/rev11','[RESOLVED 2026-11-18: rev10 removed CLICK/CUES from HOUSE, SUBS, DELAY, STAGE MON1-4 and FX buses 13-16; rev11 removed them from STREAM and from Matrix 5 ABLETON P16, and gave them their own P16 channel: Matrix 4 renamed CLK+CUE P16 (was empty XTRA P16) on P16 slot 11 (User 11, outputs A43/B43/C43). Now on IEM1-8 PRE and CLK+CUE P16 only] CLICK (Aux 7) and CUES (Aux 8) are routed like program audio: assigned to HOUSE 0 dB, SUBS 0 dB, DELAY 0 dB, STREAM -10 dB (live once their -inf faders are raised), sent POST -10 dB to PLATE/HALL/SH DELAY/LG DELAY, and sent PRE -10 dB to STAGE MON1-4 and to Matrix 5 ABLETON P16 - PRE sends are live now regardless of the fader, so click/cues reach the wedges. IEM1-8 PRE sends (-10 dB) are normally wanted.','aux.7-8.main 1-4; aux.7-8.send 1-4, 13-16, MX5','DP decision: remove CLICK/CUES from mains, FX and wedges (keep IEMs); decide whether they stay in ABLETON P16 or get their own P16 slots.'),
+ ('A17','Med','P16 slot 12 uses User 12 = Bus 12 (DJ+VID P16) POST L+R. A bus as a user-signal source has no prior example in this file (matrix sources do). Format is consistent with the matrix entries but unconfirmed.','io.in.USR.12.user = BUS 12 POST L+R','Load rev14 and confirm on console that User 12 shows Bus 12 and P16 ch 12 carries DJ+VIDEO.'),
  ('A13','Info — CLOSED (DP verified on console)','[CLOSED 2026-11-18: DP verified on the console that the output decode is correct] Output index decoding (BUS/MAIN n -> bus ceil(n/2), odd=L even=R) is inferred from the patch pattern, not a vendor document.','Snapshot Info sheet','Spot-check one output on the console.'),
 ]
 ws = wb.create_sheet('Audit Flags', 0)
@@ -111,6 +112,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'Revision DPSC_2026_DEFAULT_1A_rev13.snap (built on rev12): DP — MIC7 also goes in MICS P16. Ch 7 MIC7 send to Matrix 6 MICS P16 set on at 0 dB PRE (same as MIC3-6, MIC8). MICS P16 (P16 slot 14) = MIC3, MIC4, MIC5, MIC6, MIC7, MIC8.',
  'rev13 SHA-256 e2d39306b0812850b7b5a8ab7b6685264359a0b2037b7bef5167bb7b7ef886ac; diff vs rev12 = 2 values (ch.7.send.MX6 on/lvl); 0 GRP; Rule Checks R1-R4 PASS; CRLF and 41408 lines preserved; generator make_rev13.py',
  'Slot 12 remains empty — DP to decide (DJ, VIDEO, or a bus).'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'Revision DPSC_2026_DEFAULT_1A_rev14.snap (built on rev13): DP — put DJ and VIDEO on P16 slot 12 by repurposing a bus; DP chose IEM8 (Bus 12, unfed in original scene). Bus 12 renamed IEM8 -> DJ+VID P16; all 46 other strip sends to Bus 12 switched off; DJ (Ch 38) and VIDEO (Ch 39) sends 0 dB PRE (were -10 dB PRE). Old IEM8 outputs unpatched: A8, B8, C8, C23, C24 -> OFF. User 12 redefined Ch 8 MIC8 PRE -> Bus 12 POST L+R; A44/B44/C44 back on User 12. MIC7 already in MICS P16 since rev13 (DP repeated request; no duplicate change). IEM mixes now IEM1-IEM7. New flag A17: verify bus-type user signal on console.',
+ 'rev14 SHA-256 8ddbbdee7c185e93b31dcdb8d66719da305e6fcd1e648a83306c174f0fe8cb5b; diff vs rev13 = 68 values (46 send.12 on->off, 2 send.12 lvl -10->0, bus.12.name, USR.12.user grp/in/tap, outs A8/B8/C8/C23/C24/A44/B44/C44 grp/in); same key set; 0 GRP; Rule Checks R1-R4 PASS; CRLF and 41408 lines preserved; generator make_rev14.py',
+ 'DP: confirm A17 on console; relabel P16 ch 12 DJ+VIDEO; IEM8 transmitter/pack no longer has a feed.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
@@ -143,7 +148,14 @@ for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev11.snap','mtx.4.name','XTRA P16','CLK+CUE P16','Empty matrix repurposed as click/cues P16 channel (slot 11)')] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev12.snap',f'io.out.{g}.44','USR 12 (Ch 8 MIC8 PRE)','OFF','DP: MIC8 no own P16 slot; slot 12 empty') for g in 'ABC'] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev12.snap','ch.8.send.MX6','off/-144/PRE','on/0/PRE','DP: MIC8 into MICS P16 (matches MIC3-6)'),
-          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev13.snap','ch.7.send.MX6','off/-144/PRE','on/0/PRE','DP: MIC7 into MICS P16')] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev13.snap','ch.7.send.MX6','off/-144/PRE','on/0/PRE','DP: MIC7 into MICS P16'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev14.snap','bus.12.name','IEM8','DJ+VID P16','DP: repurpose IEM8 as DJ+VIDEO P16 mix'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev14.snap','ch.38.send.12.lvl','-10 (PRE)','0 (PRE)','DJ into DJ+VID P16'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev14.snap','ch.39.send.12.lvl','-10 (PRE)','0 (PRE)','VIDEO into DJ+VID P16'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev14.snap','io.in.USR.12.user','CH 8 PRE L+R','BUS 12 POST L+R','P16 slot 12 = DJ+VID P16 (A17 verify)')] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev14.snap',f'io.out.{o}','BUS '+('24' if o=='C24' else '23')+' (IEM8)','OFF','Old IEM8 output unpatched') for o in ('A.8','B.8','C.8','C.23','C.24')] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev14.snap',f'io.out.{g}.44','OFF','USR 12','P16 slot 12 restored to User 12') for g in 'ABC'] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev14.snap',f'{g}.{n}.send.12.on','true','false','Strip removed from Bus 12 (was IEM8)') for g,r in (('ch',[*range(1,38),40]),('aux',range(1,9))) for n in r] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}',_b(g,n,b),'on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
           for g,r in (('ch',range(1,41)),('aux',range(1,9))) for n in r for b in (9,10,11,12)]: ch.append(r)
 for col, w in zip('ABCDEF', (12,32,26,8,8,40)): ch.column_dimensions[col].width = w

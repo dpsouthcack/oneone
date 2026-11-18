@@ -37,6 +37,7 @@ def usr(i):
     if g == 'CH': s = f"Ch {n} ({chn.get(n,'')})"
     elif g == 'AUX': s = f"Aux {n} ({auxn.get(n,'') or 'unnamed'})"
     elif g == 'MTX': s = f"Matrix {n} ({mtxn.get(n,'')})"
+    elif g == 'BUS': s = f"Bus {n} ({busn.get(n,'')})"
     else: s = f"{g} in {n}" + (f" ({inname(g,n)})" if inname(g, n) else '')
     if 'tap' in u: s += f" {u['tap']} {u['lr']}"
     return s
@@ -117,11 +118,15 @@ for sl in range(1, 17):
     same = all(OUT[g][str(port)] == o for g in 'BC')
     if o['grp'] == 'USR':
         u = IN['USR'][str(o['in'])]['user']
-        mem = mxmembers(u['in']) if u['grp'] == 'MTX' else ''
+        mem = mxmembers(u['in']) if u['grp'] == 'MTX' else (', '.join(f"{c['name'] or g+n} {c['send'][str(u['in'])]['lvl']:g}dB {c['send'][str(u['in'])]['mode']}" for g in ('ch','aux') for n, c in a[g].items() if c['send'][str(u['in'])]['on']) if u['grp'] == 'BUS' else '')
         if u['grp'] == 'MTX':
             for g in ('ch', 'aux'):
                 for n, c in a[g].items():
                     if c['send']['MX'+str(u['in'])]['on']: reached.add((g, n))
+        elif u['grp'] == 'BUS':
+            for g in ('ch', 'aux'):
+                for n, c in a[g].items():
+                    if c['send'][str(u['in'])]['on']: reached.add((g, n))
         elif u['grp'] in ('CH', 'AUX'): reached.add((u['grp'].lower(), str(u['in'])))
         pm.append([sl, f'A/B/C {port}', 'yes' if same else 'NO', sig('USR', o['in']), mem or ('(no inputs)' if u['grp'] == 'MTX' else '-')])
     else: pm.append([sl, f'A/B/C {port}', 'yes' if same else 'NO', sig(o['grp'], o['in']), 'EMPTY' if o['grp'] == 'OFF' else '-'])
