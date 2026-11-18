@@ -128,22 +128,22 @@ for g in ('USB', 'CRD', 'REC'):
         if s_[0] == 'USR': u = IN['USR'][str(s_[1])]['user']; s_ = (u['grp'], u['in'])
         if s_ in tbin or (s_[0] == 'CH' and s_[1] in tbch) or (s_[0] == 'MTX' and s_[1] in tbmx):
             rr.append(['R3 no TB in recording', f'out.{g}.{p}', f'{s_[0]} {s_[1]}', '-', 'FAIL'])
-# R4: CLICK/CUES never reach house PA (HOUSE/SUBS/DELAY mains, or FX buses feeding them) or floor monitors (STAGE MON)
-pa = {k for k, m in a['main'].items() if m['name'] in ('HOUSE', 'SUBS', 'DELAY')}
+# R4: CLICK/CUES never reach any main (HOUSE/SUBS/DELAY/STREAM), FX/other buses feeding a main, or floor monitors (STAGE MON)
+pa = set(a['main'])
 for g in ('ch', 'aux'):
     for n, c in a[g].items():
         if c['name'].upper() not in ('CLICK', 'CUES'): continue
         for k, m in c['main'].items():
-            if m['on'] and k in pa: rr.append(['R4 no CLICK/CUES in house/floor', f'{g}.{n}.main.{k}', f"{c['name']} -> {mainn[int(k)]}", '-', 'FAIL'])
+            if m['on'] and k in pa: rr.append(['R4 no CLICK/CUES in mains/floor', f'{g}.{n}.main.{k}', f"{c['name']} -> {mainn[int(k)]}", '-', 'FAIL'])
         for k, v in c['send'].items():
             if not v['on'] or k.startswith('MX'): continue
             b = a['bus'][k]; feeds_pa = any(b['main'][m]['on'] for m in pa if m in b['main'])
             if b['name'].upper().startswith('STAGE MON') or feeds_pa:
-                rr.append(['R4 no CLICK/CUES in house/floor', f'{g}.{n}.send.{k}', f"{c['name']} -> {b['name']}", v['mode'], 'FAIL'])
+                rr.append(['R4 no CLICK/CUES in mains/floor', f'{g}.{n}.send.{k}', f"{c['name']} -> {b['name']}", v['mode'], 'FAIL'])
 fails = {r[0][:2] for r in rr}
 for rid, label, scope in (('R1', 'R1 never GRP', 'all ch/aux sends'), ('R2', 'R2 IEM sends = PRE', 'all ch/aux sends to IEM buses'),
                           ('R3', 'R3 no TB in recording', f'USB/CRD/REC outs vs TB ch {sorted(tbch)}, ports {sorted(tbin)}, mtx {sorted(tbmx)}'),
-                          ('R4', 'R4 no CLICK/CUES in house/floor', 'CLICK/CUES strips vs HOUSE/SUBS/DELAY, FX buses feeding them, STAGE MON 1-4')):
+                          ('R4', 'R4 no CLICK/CUES in mains/floor', 'CLICK/CUES strips vs all mains (HOUSE/SUBS/DELAY/STREAM), buses feeding a main, STAGE MON 1-4')):
     if rid not in fails: rr.append([label, scope, '', '-', 'PASS'])
 sheet('Rule Checks', ['Rule', 'Send path', 'Destination', 'Tap', 'Result'], rr)
 meta = [['Snapshot file', snap.split('/')[-1]], ['SHA-256', hashlib.sha256(raw).hexdigest()], ['Type', d['type']],
