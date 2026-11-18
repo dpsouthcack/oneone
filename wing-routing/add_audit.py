@@ -10,7 +10,7 @@ flags = [
  ('A05','Med — RESOLVED rev1','[RESOLVED 2026-11-18 in rev1: LCL 6 renamed MIC8 -> MIC6] Input port LCL 6 is labelled "MIC8" (duplicate of LCL 8 "MIC8"); channel 6 is named "MIC6".','io.in.LCL.6.name','Rename LCL 6 to MIC6.'),
  ('A06','Low — RESOLVED rev7','[RESOLVED 2026-11-18 in rev7: Ch 2 -> LEAD MIC2; LCL 3-5 -> MIC3/MIC4/MIC5; Ch 1-8 names now equal their input port names] Name mismatches: Ch 2 "LEAD MIC" vs port LCL 2 "LEAD MIC2"; Ch 3-5 "MIC3/4/5" vs ports "MIC 3/4/5".','ch.2.name; io.in.LCL.2-5','Align naming.'),
  ('A07','Med — RESOLVED rev3','[RESOLVED 2026-11-18 in rev3: USB 8 = User 24 now Ch 8 MIC8 PRE L+R (was Ch 7 R duplicate); USB 45/46 now LCL 21/22 VIDEO L/R (were blank B19/B20)] USB multitrack (USB 1-48) omits Ch 8 MIC8 and LCL 21/22 VIDEO; Ch 7 uses two tracks (L/R split of a mono channel).','out.USB 1-48; USR 17-24','Decide whether MIC8 and VIDEO need recording; reclaim one Ch7 track.'),
- ('A08','Low','USB 41-44 and 47-48 send raw ports A7, A8, B7, B8 (unnamed) and C1/C2 (C-ABLE1-2). (B19/B20 removed from USB 45/46 in rev3.)','out.USB 41-48','Confirm these are intended sources.'),
+ ('A08','Low — CLOSED (DP confirmed intended)','[CLOSED 2026-11-18: DP confirmed these raw USB sources are intended; leave as-is, no scene change] USB 41-44 and 47-48 send raw ports A7, A8, B7, B8 (unnamed) and C1/C2 (C-ABLE1-2). (B19/B20 removed from USB 45/46 in rev3.)','out.USB 41-48','Confirm these are intended sources.'),
  ('A09','Info','Ch 9-16 have alternate sources A1-A8 configured, but the global alt switch is OFF (main source B9-B17 is live).','ch.9-16.in.conn.alt*; io.altsw=false','Know this for failover.'),
  ('A10','Info','SD/card (CRD), MOD, SC, REC and AES outputs are all OFF though the WING-LIVE card is set for 32 tracks.','out.CRD/MOD/SC/REC/AES; cards.wlive','Patch CRD outs if SD recording is planned.'),
  ('A11','Info','Talkback Ch 29-32 (B21-24) are off the mains and go to IEM1-4 (-10 dB) plus Matrix 8 TB P16 only.','ch.29-32','OK as configured.'),
@@ -70,6 +70,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'Revision DPSC_2026_DEFAULT_1A_rev7.snap (built on rev6): A06 fixed — naming mismatches. Ch 2 renamed LEAD MIC -> LEAD MIC2 (matches port LCL 2 and Ch 1 LEAD MIC1). Ports LCL 3/4/5 renamed MIC 3/4/5 -> MIC3/MIC4/MIC5 (match Ch 3-5 and MIC6-8 no-space style). Full scan: Ch 1-8 strip names now equal port names. Remaining strip/port differences are blank spare names only (Ch 34-37, Ch 40 OSC, Aux 1-8; flag A12), left unchanged.',
  'rev7 SHA-256 403830931baab4ab0d97c1dd7cf34dd28e620c54377d8422d05b61c1dddeb4f2; diff vs rev6 = 4 values (ch.2.name, io.in.LCL.3/4/5.name); 0 GRP; Rule Checks R1/R2/R3 PASS; CRLF and 41408 lines preserved; generator make_rev7.py',
  'Open: A08 (confirm raw USB sources), A13 (spot-check output decode on console).'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'A08 closed: DP confirmed raw USB sources are intended — USB 41-44 = A7, A8, B7, B8; USB 47-48 = C1/C2 (C-ABLE1-2). Leave as-is. No scene change; rev7 remains current.',
+ 'DP instruction in session 2026-11-18; rev7 SHA-256 403830931baab4ab0d97c1dd7cf34dd28e620c54377d8422d05b61c1dddeb4f2 unchanged',
+ 'Only open item: A13 (spot-check output index decode on console).'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
