@@ -17,7 +17,7 @@ flags = [
  ('A12','Info','Ch 33-37 (A1-A5) and Aux 1-8 (C1-C15) are unnamed with faders at -inf; Ch 38 DJ, 39 VIDEO, 40 OSC at -inf.','ch.33-40; aux.1-8','Name or leave as spares.'),
  ('A14','Med — RESOLVED rev4','[RESOLVED 2026-11-18 in rev4: Bus 5-12 IEM1-IEM8 faders -144 -> 0 dB, unmuted] IEM bus masters Buses 5-12 (IEM1-IEM8) are all at -inf (-144 dB). Sends are built, but no IEM will be heard until its bus fader is raised.','bus.5-12.fdr = -144','Raise each IEM master at soundcheck (left down on purpose for ear safety).'),
  ('A15','Med — RESOLVED rev6','[RESOLVED 2026-11-18 in rev6: Bus 1-4 STAGE MON1-4 faders -144 -> 0 dB, unmuted] Stage Mon 1-4 master faders (Buses 1-4) are at -inf (-144 dB). Wedge sends are now at -10 dB PRE, but no wedge will be heard until these masters are raised. (FX buses 13-16 masters are already 0 dB and feed Main 1 HOUSE, so FX returns are now live.)','bus.1-4.fdr = -144','Raise Stage Mon 1-4 masters (DP decision; same as IEM masters in rev4).'),
- ('A13','Info','Output index decoding (BUS/MAIN n -> bus ceil(n/2), odd=L even=R) is inferred from the patch pattern, not a vendor document.','Snapshot Info sheet','Spot-check one output on the console.'),
+ ('A13','Info — CLOSED (DP verified on console)','[CLOSED 2026-11-18: DP verified on the console that the output decode is correct] Output index decoding (BUS/MAIN n -> bus ceil(n/2), odd=L even=R) is inferred from the patch pattern, not a vendor document.','Snapshot Info sheet','Spot-check one output on the console.'),
 ]
 ws = wb.create_sheet('Audit Flags', 0)
 ws.append(['ID','Severity','Finding','Evidence (snapshot path)','Suggested action'])
@@ -74,6 +74,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'A08 closed: DP confirmed raw USB sources are intended — USB 41-44 = A7, A8, B7, B8; USB 47-48 = C1/C2 (C-ABLE1-2). Leave as-is. No scene change; rev7 remains current.',
  'DP instruction in session 2026-11-18; rev7 SHA-256 403830931baab4ab0d97c1dd7cf34dd28e620c54377d8422d05b61c1dddeb4f2 unchanged',
  'Only open item: A13 (spot-check output index decode on console).'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'A13 closed: DP verified on the console that the output index decode is correct (BUS/MAIN n -> bus ceil(n/2), odd=L, even=R). The Output Patch decode is confirmed, not inferred. All actionable audit flags are now resolved or closed; A09-A12 remain informational. rev7 is the current scene.',
+ 'DP console verification reported in session 2026-11-18; rev7 SHA-256 403830931baab4ab0d97c1dd7cf34dd28e620c54377d8422d05b61c1dddeb4f2 unchanged',
+ 'None open. Paste Update Log rows into Master; add house rules (never GRP, IEM PRE, no TB in recording) to Operating Notes.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),

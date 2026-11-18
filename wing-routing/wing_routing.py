@@ -1,7 +1,7 @@
 """Extract input/output routing from a Behringer WING .snap (snapshot.11 JSON) into an xlsx workbook.
 Usage: python3 wing_routing.py <file.snap> <out.xlsx>
-Output-source index convention (inferred): BUS/MAIN 'in' numbers are L/R-interleaved signals,
-i.e. BUS n -> Bus ceil(n/2) L (odd) / R (even). USR n -> User Signal n (definition in io.in.USR)."""
+Output-source index convention: BUS/MAIN 'in' numbers are L/R-interleaved signals,
+i.e. BUS n -> Bus ceil(n/2) L (odd) / R (even) — verified on console 2026-11-18. USR n -> User Signal n (definition in io.in.USR)."""
 import json, sys, hashlib
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill
@@ -137,6 +137,6 @@ meta = [['Snapshot file', snap.split('/')[-1]], ['SHA-256', hashlib.sha256(raw).
         ['Creator', f"{d['creator_name']} {d['creator_version']} ({d['creator_model']})"], ['Created', d['created']],
         ['Alt source switch', str(io['altsw'])], ['Monitor 1/2 source', ', '.join(v['src'] for v in a['cfg']['mon'].values())],
         ['Output ports OFF per group', ', '.join(f"{g}:{n}/{len(OUT[g])}" for g, n in off.items())],
-        ['Index convention', 'BUS/MAIN output index is L/R interleaved (odd=L, even=R) — inferred from patch pattern, verify on console']]
+        ['Index convention', 'BUS/MAIN output index is L/R interleaved (odd=L, even=R) — VERIFIED on console by DP 2026-11-18']]
 sheet('Snapshot Info', ['Field', 'Value'], meta)
 wb.save(out); print('saved', out)
