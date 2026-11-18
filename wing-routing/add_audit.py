@@ -107,6 +107,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'P16 routing review (DP thought all 16 slots were represented / recalled a bus feeding one). Original vs rev12: no bus or main ever sent to any matrix; no matrix direct inputs; matrices reach P16 only via user signals. Original anomalies: slot 11 Matrix 4 XTRA P16 had NO inputs (empty slot all along; now CLK+CUE P16), slot 13 was Aux 1 only while the ABLETON P16 matrix (Aux 1-8) was unrouted (fixed rev1). rev12: slot 12 EMPTY (MIC8 moved to MICS P16). Strips on no P16 slot in rev12: MIC7, B5, B6, B31, B32, KICK/SNARE/HIHAT/T1/T2 ALT, DJ, VIDEO, OSC 1. P16 Map tab added to the workbook.',
  'p16_view.py comparison of original (SHA-256 32b8af9d...) and rev12 (41002da4...); outputs A/B/C 33-48 identical across A, B, C in both',
  'DP to decide: what (if anything) goes on slot 12; whether MIC7 / DJ / VIDEO should reach the P16s.'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'Revision DPSC_2026_DEFAULT_1A_rev13.snap (built on rev12): DP — MIC7 also goes in MICS P16. Ch 7 MIC7 send to Matrix 6 MICS P16 set on at 0 dB PRE (same as MIC3-6, MIC8). MICS P16 (P16 slot 14) = MIC3, MIC4, MIC5, MIC6, MIC7, MIC8.',
+ 'rev13 SHA-256 e2d39306b0812850b7b5a8ab7b6685264359a0b2037b7bef5167bb7b7ef886ac; diff vs rev12 = 2 values (ch.7.send.MX6 on/lvl); 0 GRP; Rule Checks R1-R4 PASS; CRLF and 41408 lines preserved; generator make_rev13.py',
+ 'Slot 12 remains empty — DP to decide (DJ, VIDEO, or a bus).'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
@@ -138,7 +142,8 @@ for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC
             ('send.MX4.on','false','true',f'{nm} into own P16 channel'),('send.MX4.lvl','-144','0',f'{nm} into own P16 channel (PRE)')]] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev11.snap','mtx.4.name','XTRA P16','CLK+CUE P16','Empty matrix repurposed as click/cues P16 channel (slot 11)')] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev12.snap',f'io.out.{g}.44','USR 12 (Ch 8 MIC8 PRE)','OFF','DP: MIC8 no own P16 slot; slot 12 empty') for g in 'ABC'] + [
-          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev12.snap','ch.8.send.MX6','off/-144/PRE','on/0/PRE','DP: MIC8 into MICS P16 (matches MIC3-6)')] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev12.snap','ch.8.send.MX6','off/-144/PRE','on/0/PRE','DP: MIC8 into MICS P16 (matches MIC3-6)'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev13.snap','ch.7.send.MX6','off/-144/PRE','on/0/PRE','DP: MIC7 into MICS P16')] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}',_b(g,n,b),'on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
           for g,r in (('ch',range(1,41)),('aux',range(1,9))) for n in r for b in (9,10,11,12)]: ch.append(r)
 for col, w in zip('ABCDEF', (12,32,26,8,8,40)): ch.column_dimensions[col].width = w
