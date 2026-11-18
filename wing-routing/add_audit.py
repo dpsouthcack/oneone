@@ -95,6 +95,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING house rules + scene DPSC_2026
  'DP rule extended: click and cues must not go to STREAM either (i.e. no main at all, no floor monitors), and should have their own P16 channel. Revision DPSC_2026_DEFAULT_1A_rev11.snap (built on rev10): CLICK/CUES unassigned from Main 4 STREAM; removed from Matrix 5 ABLETON P16 (slot 13 now TRAX stems only); Matrix 4 XTRA P16 (verified no inputs) renamed CLK+CUE P16 and fed by CLICK and CUES at 0 dB PRE, reaching P16 slot 11 via User 11 (MTX4 POST L+R) on outputs A43/B43/C43. CLICK/CUES now reach IEM1-8 (-10 dB PRE) and CLK+CUE P16 only. Rule R4 widened to all mains incl. STREAM.',
  'rev11 SHA-256 15158347297e628058db36f63575f0ee7608ead9a63afa8aa2f2f5cd1e91e098; diff vs rev10 = 9 values (aux.7/8 main.4.on, send.MX5.on, send.MX4.on/lvl; mtx.4.name); MX4 had zero sends before (asserted in make_rev11.py); same key set; 0 GRP; Rule Checks R1-R4 PASS on rev11, R4 FAILs on rev10 (STREAM x2); CRLF and 41408 lines preserved',
  'On P16s: label channel 11 CLK+CUE (was XTRA). Click and cues share one P16 channel; separate channels would need another P16 slot freed. Update Master Operating Notes R4 wording (no mains incl. STREAM).'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'DP confirmed: CLICK and CUES sharing one P16 channel (CLK+CUE P16, Matrix 4, P16 slot 11) is fine — keep it. No scene change; rev11 remains current.',
+ 'DP instruction in session 2026-11-18; rev11 SHA-256 15158347297e628058db36f63575f0ee7608ead9a63afa8aa2f2f5cd1e91e098 unchanged',
+ 'None open. Paste Update Log rows into Master; add house rules R1-R4 to Operating Notes; relabel P16 ch 11 CLK+CUE.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
