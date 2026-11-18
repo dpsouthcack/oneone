@@ -37,6 +37,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'Revision DPSC_2026_DEFAULT_1A_rev2.snap (built on rev1): (1) A02 fixed — Main 1 HOUSE fader -inf -> 0 dB. (2) A03 fixed — IEM5-8 (Buses 9-12) mixes built: Ch 1-40 and Aux 1-8 send at -10 dB PRE, mirroring IEM1-4 (Bus 9<-5, 10<-6, 11<-7, 12<-8; 192 sends). New flag A14: all IEM bus masters (Bus 5-12) still at -inf.',
  'rev2 SHA-256 25d4b5f397929ac40848e1efd37aff28145e0784bd1eccc48aa36f0596501648; JSON key diff vs rev1 = 769 values (main.1.fdr + 192 sends x on/lvl/mode/plink); same key set, CRLF and 41408 lines preserved; generator make_rev2.py',
  'Load rev2; raise IEM masters and tailor IEM5-8 mixes at soundcheck; confirm HOUSE level before opening PA.'])
+import json as _j
+_r1 = _j.load(open('DPSC_2026_DEFAULT_1A_rev1.snap'))['ae_data']
+def _b(g,n,b):
+    v=_r1[g][str(n)]['send'][str(b)]; return f"{'on' if v['on'] else 'off'}/{v['lvl']:g}/{v['mode']}/plink{v['plink']}"
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
@@ -44,7 +48,7 @@ for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.USR.13.user.in','1','5','A01'),
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.USR.13.user.tap','PRE','POST','A01 (matches other matrix P16 slots)'),
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap','main.1.fdr','-144','0','A02 HOUSE to unity')] + [
-          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}','off/-144/GRP/plink1','on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}',_b(g,n,b),'on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
           for g,r in (('ch',range(1,41)),('aux',range(1,9))) for n in r for b in (9,10,11,12)]: ch.append(r)
 for col, w in zip('ABCDEF', (12,32,26,8,8,40)): ch.column_dimensions[col].width = w
 for col, w in zip('ABCDE', (14,40,90,60,50)): log.column_dimensions[col].width = w
