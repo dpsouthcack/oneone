@@ -14,7 +14,7 @@ flags = [
  ('A09','Info','Ch 9-16 have alternate sources A1-A8 configured, but the global alt switch is OFF (main source B9-B17 is live).','ch.9-16.in.conn.alt*; io.altsw=false','Know this for failover.'),
  ('A10','Info','SD/card (CRD), MOD, SC, REC and AES outputs are all OFF though the WING-LIVE card is set for 32 tracks.','out.CRD/MOD/SC/REC/AES; cards.wlive','Patch CRD outs if SD recording is planned.'),
  ('A11','Info','Talkback Ch 29-32 (B21-24) are off the mains and go to IEM1-4 (-10 dB) plus Matrix 8 TB P16 only.','ch.29-32','OK as configured.'),
- ('A12','Info','Ch 33-37 (A1-A5) and Aux 1-8 (C1-C15) are unnamed with faders at -inf; Ch 38 DJ, 39 VIDEO, 40 OSC at -inf.','ch.33-40; aux.1-8','Name or leave as spares.'),
+ ('A12','Info — RESOLVED rev8','[RESOLVED 2026-11-18 in rev8: Ch 33-37 named KICK/SNARE/HIHAT/T1/T2 ALT; Aux 1-6 named from DCA tags TRAX, TRAX-DRUMS, TRAX-BASS, TRAX-KEYS, TRAX-GUITARS, TRAX-VOX; Aux 7-8 TRAX 13-14 / TRAX 15-16] Ch 33-37 (A1-A5) and Aux 1-8 (C1-C15) were unnamed with faders at -inf; Ch 38 DJ, 39 VIDEO, 40 OSC at -inf.','ch.33-40; aux.1-8','Name or leave as spares.'),
  ('A14','Med — RESOLVED rev4','[RESOLVED 2026-11-18 in rev4: Bus 5-12 IEM1-IEM8 faders -144 -> 0 dB, unmuted] IEM bus masters Buses 5-12 (IEM1-IEM8) are all at -inf (-144 dB). Sends are built, but no IEM will be heard until its bus fader is raised.','bus.5-12.fdr = -144','Raise each IEM master at soundcheck (left down on purpose for ear safety).'),
  ('A15','Med — RESOLVED rev6','[RESOLVED 2026-11-18 in rev6: Bus 1-4 STAGE MON1-4 faders -144 -> 0 dB, unmuted] Stage Mon 1-4 master faders (Buses 1-4) are at -inf (-144 dB). Wedge sends are now at -10 dB PRE, but no wedge will be heard until these masters are raised. (FX buses 13-16 masters are already 0 dB and feed Main 1 HOUSE, so FX returns are now live.)','bus.1-4.fdr = -144','Raise Stage Mon 1-4 masters (DP decision; same as IEM masters in rev4).'),
  ('A13','Info — CLOSED (DP verified on console)','[CLOSED 2026-11-18: DP verified on the console that the output decode is correct] Output index decoding (BUS/MAIN n -> bus ceil(n/2), odd=L even=R) is inferred from the patch pattern, not a vendor document.','Snapshot Info sheet','Spot-check one output on the console.'),
@@ -78,6 +78,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'A13 closed: DP verified on the console that the output index decode is correct (BUS/MAIN n -> bus ceil(n/2), odd=L, even=R). The Output Patch decode is confirmed, not inferred. All actionable audit flags are now resolved or closed; A09-A12 remain informational. rev7 is the current scene.',
  'DP console verification reported in session 2026-11-18; rev7 SHA-256 403830931baab4ab0d97c1dd7cf34dd28e620c54377d8422d05b61c1dddeb4f2 unchanged',
  'None open. Paste Update Log rows into Master; add house rules (never GRP, IEM PRE, no TB in recording) to Operating Notes.'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'Revision DPSC_2026_DEFAULT_1A_rev8.snap (built on rev7): spare strips named. Ch 33-37 (inputs A1-A5 = alt/backup sources of Ch 9-13) -> KICK ALT, SNARE ALT, HIHAT ALT, T1 ALT, T2 ALT. Aux 1-6 (Ableton C-ABLE pairs; already in DCAs 8-13) -> TRAX, TRAX-DRUMS, TRAX-BASS, TRAX-KEYS, TRAX-GUITARS, TRAX-VOX (DCA names). Aux 7-8 (no DCA; C13-16) -> TRAX 13-14, TRAX 15-16. Port names, DCA tags and colours unchanged.',
+ 'rev8 SHA-256 0e4d3746c6f8791d39d0fb9ec5c402cc97a100eab185d2a9da4dc2160b0ccf85; diff vs rev7 = 13 name values (ch.33-37.name, aux.1-8.name); names <= 12 chars; 0 GRP; Rule Checks R1/R2/R3 PASS; CRLF and 41408 lines preserved; generator make_rev8.py',
+ 'DP to confirm Aux 7-8 content (no DCA evidence) and rename if needed. Remaining blank: input port A1 name, Ch 40 OSC port (oscillator).'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
@@ -96,6 +100,10 @@ for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev7.snap','io.in.LCL.3.name','MIC 3','MIC3','A06 match Ch 3'),
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev7.snap','io.in.LCL.4.name','MIC 4','MIC4','A06 match Ch 4'),
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev7.snap','io.in.LCL.5.name','MIC 5','MIC5','A06 match Ch 5')] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev8.snap',f'ch.{n}.name','(blank)',f'{p} ALT',f'A12 input A{n-32} = alt source of Ch {n-24}') for n,p in zip(range(33,38),['KICK','SNARE','HIHAT','T1','T2'])] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev8.snap',f'aux.{n}.name','(blank)',nm,why) for n,nm,why in [
+           (1,'TRAX','A12 DCA 8 tag #D8'),(2,'TRAX-DRUMS','A12 DCA 9 tag #D9'),(3,'TRAX-BASS','A12 DCA 10 tag #D10'),(4,'TRAX-KEYS','A12 DCA 11 tag #D11'),
+           (5,'TRAX-GUITARS','A12 DCA 12 tag #D12'),(6,'TRAX-VOX','A12 DCA 13 tag #D13'),(7,'TRAX 13-14','A12 no DCA; port C-ABLE13-14'),(8,'TRAX 15-16','A12 no DCA; port C-ABLE15-16')]] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}',_b(g,n,b),'on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
           for g,r in (('ch',range(1,41)),('aux',range(1,9))) for n in r for b in (9,10,11,12)]: ch.append(r)
 for col, w in zip('ABCDEF', (12,32,26,8,8,40)): ch.column_dimensions[col].width = w
