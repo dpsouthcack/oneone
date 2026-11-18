@@ -107,6 +107,18 @@ for k, b in a['mtx'].items():
                  f"direct in: {b['dir']['in']}"])
 sheet('Buses Mains Matrix', ['Bus', 'Name', 'Config', 'Fader dB', 'Mute', 'To mains', 'Inserts / notes'], rows)
 
+# House rules (DP): never GRP taps; IEM sends always PRE
+rr = []
+def walk(o, path):
+    if isinstance(o, dict):
+        if o.get('mode') in ('GRP', 'PRE', 'POST') and 'lvl' in o:
+            dest = path.split('.')[-1]; bname = '' if dest.startswith('MX') else busn.get(int(dest), '')
+            if o['mode'] == 'GRP': rr.append(['R1 never GRP', path, bname, o['mode'], 'FAIL'])
+            if bname.startswith('IEM') and o['mode'] != 'PRE': rr.append(['R2 IEM = PRE', path, bname, o['mode'], 'FAIL'])
+        for k, v in o.items(): walk(v, path + '.' + k)
+walk(a, 'ae')
+if not rr: rr = [['R1 never GRP', 'all ch/aux sends', '', '-', 'PASS'], ['R2 IEM sends = PRE', 'all ch/aux sends to IEM buses', '', '-', 'PASS']]
+sheet('Rule Checks', ['Rule', 'Send path', 'Destination', 'Tap', 'Result'], rr)
 meta = [['Snapshot file', snap.split('/')[-1]], ['SHA-256', hashlib.sha256(raw).hexdigest()], ['Type', d['type']],
         ['Creator', f"{d['creator_name']} {d['creator_version']} ({d['creator_model']})"], ['Created', d['created']],
         ['Alt source switch', str(io['altsw'])], ['Monitor 1/2 source', ', '.join(v['src'] for v in a['cfg']['mon'].values())],

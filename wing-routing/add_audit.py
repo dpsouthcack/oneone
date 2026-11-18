@@ -41,6 +41,10 @@ import json as _j
 _r1 = _j.load(open('DPSC_2026_DEFAULT_1A_rev1.snap'))['ae_data']
 def _b(g,n,b):
     v=_r1[g][str(n)]['send'][str(b)]; return f"{'on' if v['on'] else 'off'}/{v['lvl']:g}/{v['mode']}/plink{v['plink']}"
+log.append(['2026-11-18','DPSC Live Sound — WING house rules',
+ 'DP standing rule recorded: never use GRP send taps — always PRE or POST; IEM sends always PRE. Rule Checks sheet added to the routing audit (auto-checks every ch/aux send). rev2 checked: 0 GRP sends, all 384 IEM1-8 sends PRE = PASS. Original and rev1 had 96 GRP (old IEM5-8 sends; replaced in rev2). No scene change needed.',
+ 'grep count "GRP": original 96, rev1 96, rev2 0; Rule Checks sheet R1/R2 PASS',
+ 'Add to Operating Notes in Master as a standing WING rule; apply on every future scene edit.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
