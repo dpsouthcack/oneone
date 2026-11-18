@@ -124,6 +124,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING default template',
  'DP designation: rev14 is the starting DEFAULT file for the Behringer WING for DP shows going forward. Saved as "David Pendergrass Template 2026 11-18-2026.snap" (byte-identical copy of DPSC_2026_DEFAULT_1A_rev14.snap; the scene stores no internal name, so the filename is the label). Uploaded to Google Drive. Dropbox /AUDIO LIVE/WING copy still pending (no byte upload path; DP to place it).',
  'SHA-256 8ddbbdee7c185e93b31dcdb8d66719da305e6fcd1e648a83306c174f0fe8cb5b (identical to rev14, cmp verified); Drive file in folder 1K3dlH9A5jvWJLrP8da0i-0jdLEFwTzkE; git branch claude/scene-input-output-routing-uoshsw',
  'DP: place the template in Dropbox /AUDIO LIVE/WING; add to Master Operating Notes: WING default template = David Pendergrass Template 2026 11-18-2026.snap (supersedes DPSC2026-TEMPLATE / DP LIVE DEFAULT 2026 as starting point). Open: A17 console check.'])
+log.append(['2026-11-18','DPSC Live Sound — WING default template distribution',
+ 'DP asked: upload template to Google Drive, or use a connected computer to place it in Dropbox. Google Drive: already uploaded (David Pendergrass Template 2026 11-18-2026.snap, folder 1K3dlH9A5jvWJLrP8da0i-0jdLEFwTzkE); Drive search found no AUDIO LIVE / WING folder to file it under. Connected computers: none available (list_computer_folders returned no folders), so no Dropbox-synced folder reachable. Dropbox copy still pending.',
+ 'Drive file https://drive.google.com/file/d/1k_nVRbv7fQ012x8y55j2Om-W9vtLvcUn/view (919083 bytes = local); list_computer_folders: folders [] cannot_be_used []',
+ 'DP: share a computer folder via Claude desktop app (Settings > Claude Code > Remote Control) or drag the Drive file into Dropbox /AUDIO LIVE/WING.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
