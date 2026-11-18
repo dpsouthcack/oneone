@@ -15,7 +15,7 @@ flags = [
  ('A10','Info','SD/card (CRD), MOD, SC, REC and AES outputs are all OFF though the WING-LIVE card is set for 32 tracks.','out.CRD/MOD/SC/REC/AES; cards.wlive','Patch CRD outs if SD recording is planned.'),
  ('A11','Info','Talkback Ch 29-32 (B21-24) are off the mains and go to IEM1-4 (-10 dB) plus Matrix 8 TB P16 only.','ch.29-32','OK as configured.'),
  ('A12','Info','Ch 33-37 (A1-A5) and Aux 1-8 (C1-C15) are unnamed with faders at -inf; Ch 38 DJ, 39 VIDEO, 40 OSC at -inf.','ch.33-40; aux.1-8','Name or leave as spares.'),
- ('A14','Med','IEM bus masters Buses 5-12 (IEM1-IEM8) are all at -inf (-144 dB). Sends are built, but no IEM will be heard until its bus fader is raised.','bus.5-12.fdr = -144','Raise each IEM master at soundcheck (left down on purpose for ear safety).'),
+ ('A14','Med — RESOLVED rev4','[RESOLVED 2026-11-18 in rev4: Bus 5-12 IEM1-IEM8 faders -144 -> 0 dB, unmuted] IEM bus masters Buses 5-12 (IEM1-IEM8) are all at -inf (-144 dB). Sends are built, but no IEM will be heard until its bus fader is raised.','bus.5-12.fdr = -144','Raise each IEM master at soundcheck (left down on purpose for ear safety).'),
  ('A13','Info','Output index decoding (BUS/MAIN n -> bus ceil(n/2), odd=L even=R) is inferred from the patch pattern, not a vendor document.','Snapshot Info sheet','Spot-check one output on the console.'),
 ]
 ws = wb.create_sheet('Audit Flags', 0)
@@ -53,6 +53,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING house rules',
  'DP standing rule recorded: recording does not need to include talkback mics. rev3 checked: TB Ch 29-32 (B21-24) and Matrix 8 TB P16 are on none of USB 1-48; CRD and REC outputs all OFF. Already compliant — no scene change. Rule R3 added to Rule Checks (auto-check of USB/CRD/REC outputs, resolving user signals).',
  'Rule Checks R1/R2/R3 PASS on rev3 (SHA-256 5dad4873fa2ca08f489eeeba2e57721fdff5c964534f7e155e4ee1ca79c287a2)',
  'Add to Master Operating Notes as a standing WING rule alongside never-GRP / IEM-PRE.'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'Revision DPSC_2026_DEFAULT_1A_rev4.snap (built on rev3): A14 fixed — IEM1-IEM8 master faders (Buses 5-12) raised from -inf to 0 dB at DP request. With every ch/aux sending -10 dB PRE, all eight IEM mixes are now live on scene load.',
+ 'rev4 SHA-256 c8653c86d48d0cbbd6c52ac9ce09e820a1fbd3a750d25df6f1757c89b2d8cd33; diff vs rev3 = 8 values (bus.5-12.fdr); same key set; 0 GRP; Rule Checks R1/R2/R3 PASS; CRLF and 41408 lines preserved; generator make_rev4.py',
+ 'Ear safety: keep IEM transmitters/packs down when loading rev4; set levels at soundcheck.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
@@ -63,6 +67,7 @@ for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev3.snap','io.in.USR.24.user','CH 7 PRE R','CH 8 PRE L+R','A07 USB 8 records MIC8'),
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev3.snap','io.out.USB.45','B 19','LCL 21','A07 USB 45 records VIDEO L'),
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev3.snap','io.out.USB.46','B 20','LCL 22','A07 USB 46 records VIDEO R')] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev4.snap',f'bus.{b}.fdr','-144','0',f'A14 IEM{b-4} master to 0 dB') for b in range(5,13)] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}',_b(g,n,b),'on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
           for g,r in (('ch',range(1,41)),('aux',range(1,9))) for n in r for b in (9,10,11,12)]: ch.append(r)
 for col, w in zip('ABCDEF', (12,32,26,8,8,40)): ch.column_dimensions[col].width = w
