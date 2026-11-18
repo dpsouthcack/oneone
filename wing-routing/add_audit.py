@@ -49,6 +49,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'Revision DPSC_2026_DEFAULT_1A_rev3.snap (built on rev2): A07 fixed — USB recording now includes MIC8 and VIDEO. USB 8: User 24 changed Ch 7 PRE R (duplicate of mono MIC7) -> Ch 8 MIC8 PRE L+R. USB 45/46: B19/B20 (blank, unused) -> LCL 21/22 VIDEO L/R raw, same method as DJ. Ch 7 MIC7 still recorded on USB 7. B19/B20 no longer recorded.',
  'rev3 SHA-256 5dad4873fa2ca08f489eeeba2e57721fdff5c964534f7e155e4ee1ca79c287a2; diff vs rev2 = 6 values (io.in.USR.24.user.in/lr, io.out.USB.45/46 grp/in); B19/B20 verified unused by any strip, alt source or user signal; 0 GRP; Rule Checks PASS; CRLF and 41408 lines preserved; generator make_rev3.py',
  'Load rev3; arm USB 8 and 45/46 in DAW and rename tracks (MIC8, VIDEO L, VIDEO R).'])
+log.append(['2026-11-18','DPSC Live Sound — WING house rules',
+ 'DP standing rule recorded: recording does not need to include talkback mics. rev3 checked: TB Ch 29-32 (B21-24) and Matrix 8 TB P16 are on none of USB 1-48; CRD and REC outputs all OFF. Already compliant — no scene change. Rule R3 added to Rule Checks (auto-check of USB/CRD/REC outputs, resolving user signals).',
+ 'Rule Checks R1/R2/R3 PASS on rev3 (SHA-256 5dad4873fa2ca08f489eeeba2e57721fdff5c964534f7e155e4ee1ca79c287a2)',
+ 'Add to Master Operating Notes as a standing WING rule alongside never-GRP / IEM-PRE.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),

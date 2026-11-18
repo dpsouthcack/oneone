@@ -117,7 +117,21 @@ def walk(o, path):
             if bname.startswith('IEM') and o['mode'] != 'PRE': rr.append(['R2 IEM = PRE', path, bname, o['mode'], 'FAIL'])
         for k, v in o.items(): walk(v, path + '.' + k)
 walk(a, 'ae')
-if not rr: rr = [['R1 never GRP', 'all ch/aux sends', '', '-', 'PASS'], ['R2 IEM sends = PRE', 'all ch/aux sends to IEM buses', '', '-', 'PASS']]
+# R3: recording (USB/CRD/REC) excludes talkback: TB-named channels, their input ports, TB matrices
+tbch = {int(k) for k, c in a['ch'].items() if c['name'].upper().startswith('TB')}
+tbin = {(a['ch'][str(k)]['in']['conn']['grp'], a['ch'][str(k)]['in']['conn']['in']) for k in tbch}
+tbmx = {int(k) for k, m in a['mtx'].items() if m['name'].upper().startswith('TB')}
+for g in ('USB', 'CRD', 'REC'):
+    for p, v in OUT[g].items():
+        if v['grp'] == 'OFF': continue
+        s_ = (v['grp'], v['in'])
+        if s_[0] == 'USR': u = IN['USR'][str(s_[1])]['user']; s_ = (u['grp'], u['in'])
+        if s_ in tbin or (s_[0] == 'CH' and s_[1] in tbch) or (s_[0] == 'MTX' and s_[1] in tbmx):
+            rr.append(['R3 no TB in recording', f'out.{g}.{p}', f'{s_[0]} {s_[1]}', '-', 'FAIL'])
+fails = {r[0][:2] for r in rr}
+for rid, label, scope in (('R1', 'R1 never GRP', 'all ch/aux sends'), ('R2', 'R2 IEM sends = PRE', 'all ch/aux sends to IEM buses'),
+                          ('R3', 'R3 no TB in recording', f'USB/CRD/REC outs vs TB ch {sorted(tbch)}, ports {sorted(tbin)}, mtx {sorted(tbmx)}')):
+    if rid not in fails: rr.append([label, scope, '', '-', 'PASS'])
 sheet('Rule Checks', ['Rule', 'Send path', 'Destination', 'Tap', 'Result'], rr)
 meta = [['Snapshot file', snap.split('/')[-1]], ['SHA-256', hashlib.sha256(raw).hexdigest()], ['Type', d['type']],
         ['Creator', f"{d['creator_name']} {d['creator_version']} ({d['creator_model']})"], ['Created', d['created']],
