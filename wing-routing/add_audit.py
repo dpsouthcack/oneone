@@ -17,6 +17,7 @@ flags = [
  ('A12','Info — RESOLVED rev8','[RESOLVED 2026-11-18 in rev8: Ch 33-37 named KICK/SNARE/HIHAT/T1/T2 ALT; Aux 1-6 named from DCA tags TRAX, TRAX-DRUMS, TRAX-BASS, TRAX-KEYS, TRAX-GUITARS, TRAX-VOX; Aux 7-8 TRAX 13-14 / TRAX 15-16] Ch 33-37 (A1-A5) and Aux 1-8 (C1-C15) were unnamed with faders at -inf; Ch 38 DJ, 39 VIDEO, 40 OSC at -inf.','ch.33-40; aux.1-8','Name or leave as spares.'),
  ('A14','Med — RESOLVED rev4','[RESOLVED 2026-11-18 in rev4: Bus 5-12 IEM1-IEM8 faders -144 -> 0 dB, unmuted] IEM bus masters Buses 5-12 (IEM1-IEM8) are all at -inf (-144 dB). Sends are built, but no IEM will be heard until its bus fader is raised.','bus.5-12.fdr = -144','Raise each IEM master at soundcheck (left down on purpose for ear safety).'),
  ('A15','Med — RESOLVED rev6','[RESOLVED 2026-11-18 in rev6: Bus 1-4 STAGE MON1-4 faders -144 -> 0 dB, unmuted] Stage Mon 1-4 master faders (Buses 1-4) are at -inf (-144 dB). Wedge sends are now at -10 dB PRE, but no wedge will be heard until these masters are raised. (FX buses 13-16 masters are already 0 dB and feed Main 1 HOUSE, so FX returns are now live.)','bus.1-4.fdr = -144','Raise Stage Mon 1-4 masters (DP decision; same as IEM masters in rev4).'),
+ ('A16','High','CLICK (Aux 7) and CUES (Aux 8) are routed like program audio: assigned to HOUSE 0 dB, SUBS 0 dB, DELAY 0 dB, STREAM -10 dB (live once their -inf faders are raised), sent POST -10 dB to PLATE/HALL/SH DELAY/LG DELAY, and sent PRE -10 dB to STAGE MON1-4 and to Matrix 5 ABLETON P16 - PRE sends are live now regardless of the fader, so click/cues reach the wedges. IEM1-8 PRE sends (-10 dB) are normally wanted.','aux.7-8.main 1-4; aux.7-8.send 1-4, 13-16, MX5','DP decision: remove CLICK/CUES from mains, FX and wedges (keep IEMs); decide whether they stay in ABLETON P16 or get their own P16 slots.'),
  ('A13','Info — CLOSED (DP verified on console)','[CLOSED 2026-11-18: DP verified on the console that the output decode is correct] Output index decoding (BUS/MAIN n -> bus ceil(n/2), odd=L even=R) is inferred from the patch pattern, not a vendor document.','Snapshot Info sheet','Spot-check one output on the console.'),
 ]
 ws = wb.create_sheet('Audit Flags', 0)
@@ -82,6 +83,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'Revision DPSC_2026_DEFAULT_1A_rev8.snap (built on rev7): spare strips named. Ch 33-37 (inputs A1-A5 = alt/backup sources of Ch 9-13) -> KICK ALT, SNARE ALT, HIHAT ALT, T1 ALT, T2 ALT. Aux 1-6 (Ableton C-ABLE pairs; already in DCAs 8-13) -> TRAX, TRAX-DRUMS, TRAX-BASS, TRAX-KEYS, TRAX-GUITARS, TRAX-VOX (DCA names). Aux 7-8 (no DCA; C13-16) -> TRAX 13-14, TRAX 15-16. Port names, DCA tags and colours unchanged.',
  'rev8 SHA-256 0e4d3746c6f8791d39d0fb9ec5c402cc97a100eab185d2a9da4dc2160b0ccf85; diff vs rev7 = 13 name values (ch.33-37.name, aux.1-8.name); names <= 12 chars; 0 GRP; Rule Checks R1/R2/R3 PASS; CRLF and 41408 lines preserved; generator make_rev8.py',
  'DP to confirm Aux 7-8 content (no DCA evidence) and rename if needed. Remaining blank: input port A1 name, Ch 40 OSC port (oscillator).'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'Revision DPSC_2026_DEFAULT_1A_rev9.snap (built on rev8): DP identified Aux 7 = CLICK, Aux 8 = CUES; renamed from TRAX 13-14 / TRAX 15-16. New flag A16 (High): CLICK/CUES routed like program audio — mains 1-4, FX sends, PRE to STAGE MON1-4 and Matrix 5 ABLETON P16. Routing NOT changed pending DP decision.',
+ 'rev9 SHA-256 cdd8e681492b2d6d38580d427dafb65db5b7acf21807f8947620942ac715245b; diff vs rev8 = 2 values (aux.7.name, aux.8.name); 0 GRP; Rule Checks PASS; CRLF and 41408 lines preserved; generator make_rev9.py',
+ 'DP to decide A16: remove CLICK/CUES from HOUSE/SUBS/DELAY/STREAM, FX and wedges; keep IEMs; P16 handling.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
@@ -104,6 +109,8 @@ for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev8.snap',f'aux.{n}.name','(blank)',nm,why) for n,nm,why in [
            (1,'TRAX','A12 DCA 8 tag #D8'),(2,'TRAX-DRUMS','A12 DCA 9 tag #D9'),(3,'TRAX-BASS','A12 DCA 10 tag #D10'),(4,'TRAX-KEYS','A12 DCA 11 tag #D11'),
            (5,'TRAX-GUITARS','A12 DCA 12 tag #D12'),(6,'TRAX-VOX','A12 DCA 13 tag #D13'),(7,'TRAX 13-14','A12 no DCA; port C-ABLE13-14'),(8,'TRAX 15-16','A12 no DCA; port C-ABLE15-16')]] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev9.snap','aux.7.name','TRAX 13-14','CLICK','DP identified Aux 7 as click'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev9.snap','aux.8.name','TRAX 15-16','CUES','DP identified Aux 8 as cues')] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}',_b(g,n,b),'on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
           for g,r in (('ch',range(1,41)),('aux',range(1,9))) for n in r for b in (9,10,11,12)]: ch.append(r)
 for col, w in zip('ABCDEF', (12,32,26,8,8,40)): ch.column_dimensions[col].width = w
