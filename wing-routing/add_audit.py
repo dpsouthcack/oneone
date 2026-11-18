@@ -9,8 +9,8 @@ flags = [
  ('A04','Med','Stage Mon 1-4 (Buses 1-4) and FX buses 13-16 have sends switched ON but at -inf on every channel; only IEM1-4 (Buses 5-8) carry signal (-10 dB PRE).','ch.*.send 1-4,13-16 lvl -144','Expected for a template; note no FX returns or wedges will sound until raised.'),
  ('A05','Med — RESOLVED rev1','[RESOLVED 2026-11-18 in rev1: LCL 6 renamed MIC8 -> MIC6] Input port LCL 6 is labelled "MIC8" (duplicate of LCL 8 "MIC8"); channel 6 is named "MIC6".','io.in.LCL.6.name','Rename LCL 6 to MIC6.'),
  ('A06','Low','Name mismatches: Ch 2 "LEAD MIC" vs port LCL 2 "LEAD MIC2"; Ch 3-5 "MIC3/4/5" vs ports "MIC 3/4/5".','ch.2.name; io.in.LCL.2-5','Align naming.'),
- ('A07','Med','USB multitrack (USB 1-48) omits Ch 8 MIC8 and LCL 21/22 VIDEO; Ch 7 uses two tracks (L/R split of a mono channel).','out.USB 1-48; USR 17-24','Decide whether MIC8 and VIDEO need recording; reclaim one Ch7 track.'),
- ('A08','Low','USB 43-48 send raw unnamed ports B7, B8, B19, B20 and C1/C2 (C-ABLE1-2); A7/A8 also direct.','out.USB 41-48','Confirm these are intended sources.'),
+ ('A07','Med — RESOLVED rev3','[RESOLVED 2026-11-18 in rev3: USB 8 = User 24 now Ch 8 MIC8 PRE L+R (was Ch 7 R duplicate); USB 45/46 now LCL 21/22 VIDEO L/R (were blank B19/B20)] USB multitrack (USB 1-48) omits Ch 8 MIC8 and LCL 21/22 VIDEO; Ch 7 uses two tracks (L/R split of a mono channel).','out.USB 1-48; USR 17-24','Decide whether MIC8 and VIDEO need recording; reclaim one Ch7 track.'),
+ ('A08','Low','USB 41-44 and 47-48 send raw ports A7, A8, B7, B8 (unnamed) and C1/C2 (C-ABLE1-2). (B19/B20 removed from USB 45/46 in rev3.)','out.USB 41-48','Confirm these are intended sources.'),
  ('A09','Info','Ch 9-16 have alternate sources A1-A8 configured, but the global alt switch is OFF (main source B9-B17 is live).','ch.9-16.in.conn.alt*; io.altsw=false','Know this for failover.'),
  ('A10','Info','SD/card (CRD), MOD, SC, REC and AES outputs are all OFF though the WING-LIVE card is set for 32 tracks.','out.CRD/MOD/SC/REC/AES; cards.wlive','Patch CRD outs if SD recording is planned.'),
  ('A11','Info','Talkback Ch 29-32 (B21-24) are off the mains and go to IEM1-4 (-10 dB) plus Matrix 8 TB P16 only.','ch.29-32','OK as configured.'),
@@ -45,13 +45,20 @@ log.append(['2026-11-18','DPSC Live Sound — WING house rules',
  'DP standing rule recorded: never use GRP send taps — always PRE or POST; IEM sends always PRE. Rule Checks sheet added to the routing audit (auto-checks every ch/aux send). rev2 checked: 0 GRP sends, all 384 IEM1-8 sends PRE = PASS. Original and rev1 had 96 GRP (old IEM5-8 sends; replaced in rev2). No scene change needed.',
  'grep count "GRP": original 96, rev1 96, rev2 0; Rule Checks sheet R1/R2 PASS',
  'Add to Operating Notes in Master as a standing WING rule; apply on every future scene edit.'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'Revision DPSC_2026_DEFAULT_1A_rev3.snap (built on rev2): A07 fixed — USB recording now includes MIC8 and VIDEO. USB 8: User 24 changed Ch 7 PRE R (duplicate of mono MIC7) -> Ch 8 MIC8 PRE L+R. USB 45/46: B19/B20 (blank, unused) -> LCL 21/22 VIDEO L/R raw, same method as DJ. Ch 7 MIC7 still recorded on USB 7. B19/B20 no longer recorded.',
+ 'rev3 SHA-256 5dad4873fa2ca08f489eeeba2e57721fdff5c964534f7e155e4ee1ca79c287a2; diff vs rev2 = 6 values (io.in.USR.24.user.in/lr, io.out.USB.45/46 grp/in); B19/B20 verified unused by any strip, alt source or user signal; 0 GRP; Rule Checks PASS; CRLF and 41408 lines preserved; generator make_rev3.py',
+ 'Load rev3; arm USB 8 and 45/46 in DAW and rename tracks (MIC8, VIDEO L, VIDEO R).'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.USR.13.user.grp','AUX','MTX','A01 route Matrix 5 to P16 slot 13'),
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.USR.13.user.in','1','5','A01'),
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.USR.13.user.tap','PRE','POST','A01 (matches other matrix P16 slots)'),
-          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap','main.1.fdr','-144','0','A02 HOUSE to unity')] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap','main.1.fdr','-144','0','A02 HOUSE to unity'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev3.snap','io.in.USR.24.user','CH 7 PRE R','CH 8 PRE L+R','A07 USB 8 records MIC8'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev3.snap','io.out.USB.45','B 19','LCL 21','A07 USB 45 records VIDEO L'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev3.snap','io.out.USB.46','B 20','LCL 22','A07 USB 46 records VIDEO R')] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}',_b(g,n,b),'on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
           for g,r in (('ch',range(1,41)),('aux',range(1,9))) for n in r for b in (9,10,11,12)]: ch.append(r)
 for col, w in zip('ABCDEF', (12,32,26,8,8,40)): ch.column_dimensions[col].width = w
