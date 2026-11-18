@@ -8,7 +8,7 @@ flags = [
  ('A03','High — RESOLVED rev2','[RESOLVED 2026-11-18 in rev2: all 40 ch + 8 aux now send to Buses 9-12 at -10 dB PRE, copied from their Bus 5-8 sends] IEM5-IEM8 (Buses 9-12) are patched to A/B/C outputs but no channel or aux sends to them.','ch/aux send 9-12 all off; out A5-8, B5-8, C5-8, C17-24','Build IEM5-8 mixes or unpatch.'),
  ('A04','Med — RESOLVED rev5','[RESOLVED 2026-11-18 in rev5: 352 sends raised -inf -> -10 dB (44 strips x Bus 1-4 PRE + Bus 13-16 POST); TB ch 29-32 stay off] Stage Mon 1-4 (Buses 1-4) and FX buses 13-16 have sends switched ON but at -inf on every channel; only IEM1-4 (Buses 5-8) carry signal (-10 dB PRE).','ch.*.send 1-4,13-16 lvl -144','Expected for a template; note no FX returns or wedges will sound until raised.'),
  ('A05','Med — RESOLVED rev1','[RESOLVED 2026-11-18 in rev1: LCL 6 renamed MIC8 -> MIC6] Input port LCL 6 is labelled "MIC8" (duplicate of LCL 8 "MIC8"); channel 6 is named "MIC6".','io.in.LCL.6.name','Rename LCL 6 to MIC6.'),
- ('A06','Low','Name mismatches: Ch 2 "LEAD MIC" vs port LCL 2 "LEAD MIC2"; Ch 3-5 "MIC3/4/5" vs ports "MIC 3/4/5".','ch.2.name; io.in.LCL.2-5','Align naming.'),
+ ('A06','Low — RESOLVED rev7','[RESOLVED 2026-11-18 in rev7: Ch 2 -> LEAD MIC2; LCL 3-5 -> MIC3/MIC4/MIC5; Ch 1-8 names now equal their input port names] Name mismatches: Ch 2 "LEAD MIC" vs port LCL 2 "LEAD MIC2"; Ch 3-5 "MIC3/4/5" vs ports "MIC 3/4/5".','ch.2.name; io.in.LCL.2-5','Align naming.'),
  ('A07','Med — RESOLVED rev3','[RESOLVED 2026-11-18 in rev3: USB 8 = User 24 now Ch 8 MIC8 PRE L+R (was Ch 7 R duplicate); USB 45/46 now LCL 21/22 VIDEO L/R (were blank B19/B20)] USB multitrack (USB 1-48) omits Ch 8 MIC8 and LCL 21/22 VIDEO; Ch 7 uses two tracks (L/R split of a mono channel).','out.USB 1-48; USR 17-24','Decide whether MIC8 and VIDEO need recording; reclaim one Ch7 track.'),
  ('A08','Low','USB 41-44 and 47-48 send raw ports A7, A8, B7, B8 (unnamed) and C1/C2 (C-ABLE1-2). (B19/B20 removed from USB 45/46 in rev3.)','out.USB 41-48','Confirm these are intended sources.'),
  ('A09','Info','Ch 9-16 have alternate sources A1-A8 configured, but the global alt switch is OFF (main source B9-B17 is live).','ch.9-16.in.conn.alt*; io.altsw=false','Know this for failover.'),
@@ -66,6 +66,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'Revision DPSC_2026_DEFAULT_1A_rev6.snap (built on rev5): A15 fixed — STAGE MON1-4 master faders (Buses 1-4) raised from -inf to 0 dB at DP request. All 16 buses and 4 mains now at 0 dB, none muted; wedges live on scene load (GEQ inserts FX9-12 remain in place).',
  'rev6 SHA-256 7a460382c00443dc6574bfb0d8d52ddb8880b936f6c91604e79e380c3b2f75f1; diff vs rev5 = 4 values (bus.1-4.fdr); same key set; 0 GRP; Rule Checks R1/R2/R3 PASS; CRLF and 41408 lines preserved; generator make_rev6.py',
  'Keep wedge amps down when loading rev6; ring out wedges at soundcheck. Open: A06, A08, A13.'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'Revision DPSC_2026_DEFAULT_1A_rev7.snap (built on rev6): A06 fixed — naming mismatches. Ch 2 renamed LEAD MIC -> LEAD MIC2 (matches port LCL 2 and Ch 1 LEAD MIC1). Ports LCL 3/4/5 renamed MIC 3/4/5 -> MIC3/MIC4/MIC5 (match Ch 3-5 and MIC6-8 no-space style). Full scan: Ch 1-8 strip names now equal port names. Remaining strip/port differences are blank spare names only (Ch 34-37, Ch 40 OSC, Aux 1-8; flag A12), left unchanged.',
+ 'rev7 SHA-256 403830931baab4ab0d97c1dd7cf34dd28e620c54377d8422d05b61c1dddeb4f2; diff vs rev6 = 4 values (ch.2.name, io.in.LCL.3/4/5.name); 0 GRP; Rule Checks R1/R2/R3 PASS; CRLF and 41408 lines preserved; generator make_rev7.py',
+ 'Open: A08 (confirm raw USB sources), A13 (spot-check output decode on console).'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
@@ -80,6 +84,10 @@ for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev5.snap',f'{g}.{n}.send.{b}.lvl','-144','-10',f'A04 {"Stage Mon "+str(b) if b<5 else "FX bus "+str(b)} send')
           for g,r in (('ch',[*range(1,29),*range(33,41)]),('aux',range(1,9))) for n in r for b in (1,2,3,4,13,14,15,16)] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev6.snap',f'bus.{b}.fdr','-144','0',f'A15 STAGE MON{b} master to 0 dB') for b in range(1,5)] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev7.snap','ch.2.name','LEAD MIC','LEAD MIC2','A06 match port LCL 2'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev7.snap','io.in.LCL.3.name','MIC 3','MIC3','A06 match Ch 3'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev7.snap','io.in.LCL.4.name','MIC 4','MIC4','A06 match Ch 4'),
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev7.snap','io.in.LCL.5.name','MIC 5','MIC5','A06 match Ch 5')] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}',_b(g,n,b),'on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
           for g,r in (('ch',range(1,41)),('aux',range(1,9))) for n in r for b in (9,10,11,12)]: ch.append(r)
 for col, w in zip('ABCDEF', (12,32,26,8,8,40)): ch.column_dimensions[col].width = w
