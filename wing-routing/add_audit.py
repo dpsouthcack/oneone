@@ -16,7 +16,7 @@ flags = [
  ('A11','Info','Talkback Ch 29-32 (B21-24) are off the mains and go to IEM1-4 (-10 dB) plus Matrix 8 TB P16 only.','ch.29-32','OK as configured.'),
  ('A12','Info','Ch 33-37 (A1-A5) and Aux 1-8 (C1-C15) are unnamed with faders at -inf; Ch 38 DJ, 39 VIDEO, 40 OSC at -inf.','ch.33-40; aux.1-8','Name or leave as spares.'),
  ('A14','Med — RESOLVED rev4','[RESOLVED 2026-11-18 in rev4: Bus 5-12 IEM1-IEM8 faders -144 -> 0 dB, unmuted] IEM bus masters Buses 5-12 (IEM1-IEM8) are all at -inf (-144 dB). Sends are built, but no IEM will be heard until its bus fader is raised.','bus.5-12.fdr = -144','Raise each IEM master at soundcheck (left down on purpose for ear safety).'),
- ('A15','Med','Stage Mon 1-4 master faders (Buses 1-4) are at -inf (-144 dB). Wedge sends are now at -10 dB PRE, but no wedge will be heard until these masters are raised. (FX buses 13-16 masters are already 0 dB and feed Main 1 HOUSE, so FX returns are now live.)','bus.1-4.fdr = -144','Raise Stage Mon 1-4 masters (DP decision; same as IEM masters in rev4).'),
+ ('A15','Med — RESOLVED rev6','[RESOLVED 2026-11-18 in rev6: Bus 1-4 STAGE MON1-4 faders -144 -> 0 dB, unmuted] Stage Mon 1-4 master faders (Buses 1-4) are at -inf (-144 dB). Wedge sends are now at -10 dB PRE, but no wedge will be heard until these masters are raised. (FX buses 13-16 masters are already 0 dB and feed Main 1 HOUSE, so FX returns are now live.)','bus.1-4.fdr = -144','Raise Stage Mon 1-4 masters (DP decision; same as IEM masters in rev4).'),
  ('A13','Info','Output index decoding (BUS/MAIN n -> bus ceil(n/2), odd=L even=R) is inferred from the patch pattern, not a vendor document.','Snapshot Info sheet','Spot-check one output on the console.'),
 ]
 ws = wb.create_sheet('Audit Flags', 0)
@@ -62,6 +62,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'Revision DPSC_2026_DEFAULT_1A_rev5.snap (built on rev4): A04 fixed — stage monitor and FX sends brought up. Every send already switched ON to Stage Mon 1-4 (Bus 1-4, PRE) and PLATE/HALL/SH DELAY/LG DELAY (Bus 13-16, POST) raised from -inf to -10 dB, matching IEM send level: Ch 1-28, 33-40 and Aux 1-8 (44 strips, 352 sends). Taps unchanged. Talkback Ch 29-32 sends remain OFF. New flag A15: Stage Mon 1-4 masters still -inf; FX masters at 0 dB so FX now reaches HOUSE.',
  'rev5 SHA-256 e6e30bce79dd887ed2e79845f97a52896408bee81f4cfec891e815ea1e71520b; diff vs rev4 = 352 values, all send lvl -144 -> -10 on buses 1-4/13-16; same key set; 0 GRP; Rule Checks R1/R2/R3 PASS; CRLF and 41408 lines preserved; generator make_rev5.py',
  'DP to decide Stage Mon 1-4 master level (A15); trim FX send levels per source at soundcheck.'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'Revision DPSC_2026_DEFAULT_1A_rev6.snap (built on rev5): A15 fixed — STAGE MON1-4 master faders (Buses 1-4) raised from -inf to 0 dB at DP request. All 16 buses and 4 mains now at 0 dB, none muted; wedges live on scene load (GEQ inserts FX9-12 remain in place).',
+ 'rev6 SHA-256 7a460382c00443dc6574bfb0d8d52ddb8880b936f6c91604e79e380c3b2f75f1; diff vs rev5 = 4 values (bus.1-4.fdr); same key set; 0 GRP; Rule Checks R1/R2/R3 PASS; CRLF and 41408 lines preserved; generator make_rev6.py',
+ 'Keep wedge amps down when loading rev6; ring out wedges at soundcheck. Open: A06, A08, A13.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
@@ -75,6 +79,7 @@ for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev4.snap',f'bus.{b}.fdr','-144','0',f'A14 IEM{b-4} master to 0 dB') for b in range(5,13)] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev5.snap',f'{g}.{n}.send.{b}.lvl','-144','-10',f'A04 {"Stage Mon "+str(b) if b<5 else "FX bus "+str(b)} send')
           for g,r in (('ch',[*range(1,29),*range(33,41)]),('aux',range(1,9))) for n in r for b in (1,2,3,4,13,14,15,16)] + [
+          ('2026-11-18','DPSC_2026_DEFAULT_1A_rev6.snap',f'bus.{b}.fdr','-144','0',f'A15 STAGE MON{b} master to 0 dB') for b in range(1,5)] + [
           ('2026-11-18','DPSC_2026_DEFAULT_1A_rev2.snap',f'{g}.{n}.send.{b}',_b(g,n,b),'on/-10/PRE/plink0',f'A03 IEM{b-4} mirrors Bus {b-4} send')
           for g,r in (('ch',range(1,41)),('aux',range(1,9))) for n in r for b in (9,10,11,12)]: ch.append(r)
 for col, w in zip('ABCDEF', (12,32,26,8,8,40)): ch.column_dimensions[col].width = w
