@@ -120,6 +120,10 @@ log.append(['2026-11-18','DPSC Live Sound — Dropbox archive of DPSC_2026_DEFAU
  'DP asked to upload the current scene (rev14) to Dropbox AUDIO LIVE, clearly labelled. Target found: /AUDIO LIVE/WING (holds all WING .snap scenes incl. DPSC2026-TEMPLATE). NOT UPLOADED: Dropbox connector can only create text files from inline content (919 KB scene impractical and risks CRLF changes); byte-exact upload needs a Dropbox token for content.dropboxapi.com — credential request declined by DP. Proposed label: DPSC_2026_DEFAULT_1A_rev14_2026-11-18_DJ-VID-P16_CLK-CUE-P16.snap.',
  'Dropbox search/list of /AUDIO LIVE and /AUDIO LIVE/WING; rev14 SHA-256 8ddbbdee7c185e93b31dcdb8d66719da305e6fcd1e648a83306c174f0fe8cb5b; Drive copy https://drive.google.com/file/d/1iOG0UPEna6RoFJpaVdomVX93EVyQpBah/view',
  'DP to drop the Drive copy into /AUDIO LIVE/WING under the proposed label, or approve another route.'])
+log.append(['2026-11-18','DPSC Live Sound — WING default template',
+ 'DP designation: rev14 is the starting DEFAULT file for the Behringer WING for DP shows going forward. Saved as "David Pendergrass Template 2026 11-18-2026.snap" (byte-identical copy of DPSC_2026_DEFAULT_1A_rev14.snap; the scene stores no internal name, so the filename is the label). Uploaded to Google Drive. Dropbox /AUDIO LIVE/WING copy still pending (no byte upload path; DP to place it).',
+ 'SHA-256 8ddbbdee7c185e93b31dcdb8d66719da305e6fcd1e648a83306c174f0fe8cb5b (identical to rev14, cmp verified); Drive file in folder 1K3dlH9A5jvWJLrP8da0i-0jdLEFwTzkE; git branch claude/scene-input-output-routing-uoshsw',
+ 'DP: place the template in Dropbox /AUDIO LIVE/WING; add to Master Operating Notes: WING default template = David Pendergrass Template 2026 11-18-2026.snap (supersedes DPSC2026-TEMPLATE / DP LIVE DEFAULT 2026 as starting point). Open: A17 console check.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
