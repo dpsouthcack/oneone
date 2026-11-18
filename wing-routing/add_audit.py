@@ -132,6 +132,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING default template filing',
  'Google Drive folder "WING Templates" created at top level of My Drive (https://drive.google.com/drive/folders/164FINGY3ds5pcqhz76nuppF-ABCFylFR). David Pendergrass Template 2026 11-18-2026.snap moved there from "Manuals Library — Consoles & Show Software (2026-11-17)". Same file ID and link; routing/audit sheets stay in the Manuals Library folder.',
  'Drive folder ID 164FINGY3ds5pcqhz76nuppF-ABCFylFR; file 1k_nVRbv7fQ012x8y55j2Om-W9vtLvcUn parentId verified = WING Templates, size 919083 bytes unchanged',
  'Dropbox /AUDIO LIVE/WING copy still pending (DP). Add WING Templates folder link to Master Operating Notes.'])
+log.append(['2026-11-18','DPSC Live Sound — WING default template filing (corrected)',
+ 'DP pointed to existing FTR WING SCENE LIBRARY (Drive 1F4r9DAGp5OALyUFaq17oNyl2XwJhGtaV: 00 MASTER BACKUPS, 01 EVOLUTION PARTY BAND, 02 TIME OF OUR LIFE BAND, 03 UNIVERSAL FTR TEMPLATES). David Pendergrass Template 2026 11-18-2026.snap moved into 03 - UNIVERSAL FTR TEMPLATES (1IEVFbU22Gh3IhuQFvSWSVM-6wO-QCx_t; was empty). Duplicate "WING Templates" folder created earlier this session verified empty and moved to Drive trash (restorable).',
+ 'File 1k_nVRbv7fQ012x8y55j2Om-W9vtLvcUn parentId verified = 03 - UNIVERSAL FTR TEMPLATES, 919083 bytes; folder 164FINGY3ds5pcqhz76nuppF-ABCFylFR had 0 children before trash',
+ 'Master Operating Notes: WING default template lives in FTR WING SCENE LIBRARY / 03 - UNIVERSAL FTR TEMPLATES. Dropbox /AUDIO LIVE/WING copy still pending (DP).'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
