@@ -107,6 +107,27 @@ for k, b in a['mtx'].items():
                  f"direct in: {b['dir']['in']}"])
 sheet('Buses Mains Matrix', ['Bus', 'Name', 'Config', 'Fader dB', 'Mute', 'To mains', 'Inserts / notes'], rows)
 
+# P16 map: slots 1-16 = A/B/C outputs 33-48
+def mxmembers(i):
+    return ', '.join(f"{c['name'] or g+n} {c['send']['MX'+str(i)]['lvl']:g}dB {c['send']['MX'+str(i)].get('mode','')}"
+                     for g in ('ch', 'aux') for n, c in a[g].items() if c['send']['MX'+str(i)]['on'])
+pm, reached = [], set()
+for sl in range(1, 17):
+    port = 32 + sl; o = OUT['A'][str(port)]
+    same = all(OUT[g][str(port)] == o for g in 'BC')
+    if o['grp'] == 'USR':
+        u = IN['USR'][str(o['in'])]['user']
+        mem = mxmembers(u['in']) if u['grp'] == 'MTX' else ''
+        if u['grp'] == 'MTX':
+            for g in ('ch', 'aux'):
+                for n, c in a[g].items():
+                    if c['send']['MX'+str(u['in'])]['on']: reached.add((g, n))
+        elif u['grp'] in ('CH', 'AUX'): reached.add((u['grp'].lower(), str(u['in'])))
+        pm.append([sl, f'A/B/C {port}', 'yes' if same else 'NO', sig('USR', o['in']), mem or ('(no inputs)' if u['grp'] == 'MTX' else '-')])
+    else: pm.append([sl, f'A/B/C {port}', 'yes' if same else 'NO', sig(o['grp'], o['in']), 'EMPTY' if o['grp'] == 'OFF' else '-'])
+pm.append(['', '', '', 'Strips on no P16 slot:', ', '.join(f"{'CH' if g=='ch' else 'AUX'} {n} {c['name'] or '(blank)'}" for g in ('ch', 'aux') for n, c in a[g].items() if (g, n) not in reached)])
+sheet('P16 Map', ['P16 slot', 'Outputs', 'A=B=C', 'Source', 'Matrix contents (level/tap)'], pm)
+
 # House rules (DP): never GRP taps; IEM sends always PRE
 rr = []
 def walk(o, path):

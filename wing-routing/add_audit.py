@@ -103,6 +103,10 @@ log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
  'Revision DPSC_2026_DEFAULT_1A_rev12.snap (built on rev11): DP rule — MIC8 should not have its own P16 channel. P16 slot 12 (outputs A44/B44/C44, was User 12 = Ch 8 MIC8 PRE) set OFF; slot 12 now empty per DP. MIC8 added to Matrix 6 MICS P16 at 0 dB PRE (same as MIC3-6), so MICS P16 = MIC3, MIC4, MIC5, MIC6, MIC8. User 12 definition left in place but unused (no OFF user-signal example in file; outputs OFF is the proven format).',
  'rev12 SHA-256 41002da4ebcce6fffafa3a37c3ccec2fa3e09e2a0c9b667cb48a5f5005ffe420; diff vs rev11 = 8 values (io.out.A/B/C.44 grp/in, ch.8.send.MX6 on/lvl); same key set; 0 GRP; Rule Checks R1-R4 PASS; CRLF and 41408 lines preserved; generator make_rev12.py',
  'On P16s: clear/relabel channel 12 (was MIC8). Note MIC7 is in no P16 mix (unchanged).'])
+log.append(['2026-11-18','DPSC Live Sound — WING scene DPSC_2026_DEFAULT_1A',
+ 'P16 routing review (DP thought all 16 slots were represented / recalled a bus feeding one). Original vs rev12: no bus or main ever sent to any matrix; no matrix direct inputs; matrices reach P16 only via user signals. Original anomalies: slot 11 Matrix 4 XTRA P16 had NO inputs (empty slot all along; now CLK+CUE P16), slot 13 was Aux 1 only while the ABLETON P16 matrix (Aux 1-8) was unrouted (fixed rev1). rev12: slot 12 EMPTY (MIC8 moved to MICS P16). Strips on no P16 slot in rev12: MIC7, B5, B6, B31, B32, KICK/SNARE/HIHAT/T1/T2 ALT, DJ, VIDEO, OSC 1. P16 Map tab added to the workbook.',
+ 'p16_view.py comparison of original (SHA-256 32b8af9d...) and rev12 (41002da4...); outputs A/B/C 33-48 identical across A, B, C in both',
+ 'DP to decide: what (if anything) goes on slot 12; whether MIC7 / DJ / VIDEO should reach the P16s.'])
 ch = wb.create_sheet('Change Log')
 ch.append(['Date (UTC)','File','JSON path','Before','After','Reason'])
 for r in [('2026-11-18','DPSC_2026_DEFAULT_1A_rev1.snap','io.in.LCL.6.name','MIC8','MIC6','A05 duplicate label'),
